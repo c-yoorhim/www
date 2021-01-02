@@ -16,15 +16,27 @@
     <br>
 
     <?php 
-      //define array   
-      $shares = array("");
-      //push user input into array
-      array_unshift($shares, $_POST["share"]);
-      // Loop through array to echo each element
-      foreach($shares as $share) {
-        echo $share . "<br>";
+      
+      //get array from file
+      $get_shares = unserialize(file_get_contents("saved_shares.txt"));
+      
+      if (empty($get_shares)) {
+        //setup as array
+        $get_shares = array();
+        $save_shares = file_put_contents("saved_shares.txt", serialize($get_shares));
       }
-    ?>
+      
+      if (isset($get_shares)) {
+        //push user input into front of array
+        array_unshift($get_shares, $_POST["share"]); 
+        //convert array to string
+        echo implode(" | ", $get_shares);
+        //save updated array into file
+        $save_shares = file_put_contents("saved_shares.txt", serialize($get_shares));
+
+      }
+      
+  ?>
 
   </body>
 </html>
